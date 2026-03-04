@@ -106,5 +106,5 @@ def generate_json(df, output_file):
             except Exception:
                 continue
             
-generate_json(data[data["toxicity"] == 0], "go_terms_not_toxic.json")
 generate_json(data[data["toxicity"] == 1], "go_terms_toxic.json")
+generate_json(data[data["toxicity"] == 0], "go_terms_not_toxic.json")

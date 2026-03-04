@@ -107,6 +107,7 @@ def get_GO_terms(PDB, PID, debug = False):
     interpro_csr = sp.csr_matrix((1, INTERPRO_DIM), dtype=np.float32)
     
     if debug: (print("🚀 Runing DPFunc"))
+    
     final_result = dpfunc_predict_in_memory(
         ont=ONTOLOGY,
         pid_list=[PID],

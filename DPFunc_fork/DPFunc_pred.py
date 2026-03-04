@@ -83,7 +83,7 @@ def dpfunc_predict_in_memory(
         label_num=labels_num,
         head=head,
     ).to(device)
-
+    
     cob_pred_df = []
 
     if save_each_submodel and (not save_files or len(save_files) != len(checkpoint_paths)):
