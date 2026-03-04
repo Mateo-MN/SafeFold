@@ -36,7 +36,6 @@ def read_fasta(filepath):
 
     return parsed
 
-
 # Load toxins
 toxins = read_fasta("./data/Toxins.fasta")
 n_toxins = len(toxins)
@@ -61,28 +60,51 @@ data = pd.DataFrame({
 data.head()
 
 parser = PDBParser(QUIET=True)
-output_file = "go_terms_not_toxic.json"
 
-df = data[data["toxicity"] == 0]
+def generate_json(df, output_file):
+    done = set()
 
-done = set()
-if os.path.exists(output_file):
-    with open(output_file, "r") as f:
-        for line in f:
-            done.add(json.loads(line)["uniprot_id"])
+    # load already-processed IDs from existing JSONL (skip malformed lines)
+    if os.path.exists(output_file):
+        with open(output_file, "r") as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    obj = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
 
-with open(output_file, "a") as f:
-    for uniprot_id in tqdm(df["uniprot_id"]):
-        if uniprot_id in done:
-            continue
+                uid = obj.get("uniprot_id")
+                if uid:
+                    done.add(uid)
+                    
+    print(done)
 
-        af = requests.get(f"https://alphafold.ebi.ac.uk/api/prediction/{uniprot_id}").json()
-        pdb_string = requests.get(af[0]["pdbUrl"]).text
+    with open(output_file, "a") as f:
+        for uniprot_id in tqdm(df["uniprot_id"].dropna().astype(str).unique()):
+            try:
+                print(uniprot_id)
+                # if the ID (UI/uid/uniprot_id) is already in the JSONL, skip
+                if uniprot_id in done:
+                    continue
 
-        structure = parser.get_structure("protein", StringIO(pdb_string))
-        model = structure[0]
+                af = requests.get(f"https://alphafold.ebi.ac.uk/api/prediction/{uniprot_id}").json()
+                pdb_string = requests.get(af[0]["pdbUrl"]).text
 
-        GO_terms = get_GO_terms(model, uniprot_id)
+                structure = parser.get_structure("protein", StringIO(pdb_string))
+                model = structure[0]
 
-        f.write(json.dumps({"uniprot_id": uniprot_id, "GO_terms": GO_terms.to_dict()}) + "\n")
-        f.flush()
+                GO_terms = get_GO_terms(model, uniprot_id)
+
+                f.write(json.dumps({"uniprot_id": uniprot_id, "GO_terms": GO_terms.to_dict()}) + "\n")
+                f.flush()
+
+                done.add(uniprot_id)
+
+            except Exception:
+                continue
+            
+generate_json(data[data["toxicity"] == 0], "go_terms_not_toxic.json")
+generate_json(data[data["toxicity"] == 1], "go_terms_toxic.json")
