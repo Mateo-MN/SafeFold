@@ -142,7 +142,6 @@ dependencies:
   - libxcb=1.17.0=h9b100fa_0
   - libxkbcommon=1.0.1=h097e994_2
   - libxml2=2.13.5=hfdd30dd_0
-  - lmdb=0.9.31=hb25bd0a_0
   - lz4-c=1.9.4=h6a678d5_1
   - markupsafe=2.1.3=py38h5eee18b_0
   - matplotlib-inline=0.1.6=py38h06a4308_0
@@ -265,7 +264,16 @@ dependencies:
   - pip:
       - biopython==1.83
       - fair-esm==2.0.0
+      - filelock==3.16.1
+      - hf-xet==1.3.2
+      - huggingface-hub==0.36.2
+      - lmdb==1.7.5
       - logzero==1.7.0
+      - openprotein==0.2.0
       - python-dotenv==1.0.1
+      - regex==2024.11.6
       - ruamel-yaml==0.18.10
+      - safetensors==0.5.3
+      - tokenizers==0.20.3
+      - transformers==4.46.3
 prefix: /home/mateo/miniconda3/envs/SafeFold
