@@ -76,7 +76,7 @@ def build_graph_from_points(points: np.ndarray, threshold: float = 12.0):
     g.edata["dis"] = torch.tensor(dis, dtype=torch.float32)
     return g
 
-def get_GO_terms(PDB, PID, debug = False):
+def get_GO_terms(PDB, PID="XXX", debug = False):
     # 1) Build seq + coords
     if debug: (print("🔗 Extracting sequence and Cα coords from PDB"))
     seq, coords = extract_sequence_and_ca_coords(PDB, chain_id=None)
