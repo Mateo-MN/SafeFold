@@ -14,7 +14,7 @@ The pipeline combines classical bioinformatics with deep learning:
 The output is a **toxicity probability score for each detected protein**. The current model is limited to detecting β-neurotoxins.
 
 ## Pipeline Overview
-The inner workings of the SafeFold are explained in the following document: [Model document]((https://drive.google.com/file/d/1PV291untgVmPfJdwgVlkqcb17X51CT_Q/view?usp=sharing)
+The inner workings of the SafeFold are explained in the following document: [Model document](https://drive.google.com/file/d/1PV291untgVmPfJdwgVlkqcb17X51CT_Q/view?usp=sharing)
 
 A diagram of SafeFold can be seen bellow:
 <p align="center">
