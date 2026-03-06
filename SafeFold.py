@@ -45,6 +45,7 @@ def analyseAA(aa_seq):
         print(f"⚠️ Probably toxic ({toxicity:.2})")
     else:
         print(f"👍 Not toxic")
+    print("\n")
     
     return toxicity
 
@@ -89,7 +90,7 @@ def main():
     
     if args.AA:
         if toxic_seqs:
-            print("⚠️ Toxic ORFs detected")
+            print(f"⚠️ {len(toxic_seqs)} Toxic ORFs detected")
             for seq in toxic_seqs:
                 print(seq)
         else:
