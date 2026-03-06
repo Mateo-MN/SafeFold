@@ -11,7 +11,6 @@ from SafeFold_architecture.Layers.tox_layer import go_terms_to_toxicity
 load_dotenv()
 api_key = os.getenv("AMINA_API_KEY")
 
-
 def read_fasta(path):
     sequences = []
     seq = ""
@@ -30,24 +29,24 @@ def read_fasta(path):
 
     return sequences
 
-
 def analyseAA(aa_seq):
+    print(f"Analyzing: {aa_seq}")
+    
     print("🏗️ Getting PDB...")
     pdb = ORF_to_pdb(aa_seq)
 
-    print("🔢 Predicting GO terms (DPFunc)...")
+    print("\n⚙️ Predicting GO terms (DPFunc)...")
     go_terms = pdb_to_go_terms(pdb)
 
-    print("🧪 Predicting toxicity...")
+    print("\n🧪 Predicting toxicity...")
     toxicity = go_terms_to_toxicity(go_terms)
-    
-    print(f"Toxicity: {toxicity}")
-    
+        
     if toxicity > 0.5:
         print(f"⚠️ Probably toxic ({round(toxicity, 3)})")
+    else:
+        print(f"👍 Not toxic")
     
     return toxicity
-
 
 def analyseDNA(DNA):
     toxicORFs = []
@@ -61,12 +60,11 @@ def analyseDNA(DNA):
             toxicORFs.append(ORF)
 
     if toxicORFs:
-        print("⚠️ Toxic ORFs detected")
+        print(f"\n⚠️ {len(toxicORFs)} Toxic ORFs detected: ")
         for ORF in toxicORFs:
             print(ORF)
     else:
-        print("✅ No toxicity detected")
-
+        print("\n✅ No toxicity detected")
 
 def main():
     parser = argparse.ArgumentParser(description="SafeFold toxicity screening")
@@ -80,8 +78,7 @@ def main():
     if args.AA:
         toxic_seqs = []
         
-    for seq in sequences:
-        print(seq)
+    for seq in tqdm(sequences):
         if args.AA:
             toxicity = analyseAA(seq)
             if toxicity > 0.5:

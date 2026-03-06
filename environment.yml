@@ -269,6 +269,7 @@ dependencies:
       - huggingface-hub==0.36.2
       - lmdb==1.7.5
       - logzero==1.7.0
+      - nvidia-nccl-cu12==2.29.7
       - openprotein==0.2.0
       - python-dotenv==1.0.1
       - regex==2024.11.6
@@ -276,4 +277,5 @@ dependencies:
       - safetensors==0.5.3
       - tokenizers==0.20.3
       - transformers==4.46.3
+      - xgboost==2.1.4
 prefix: /home/mateo/miniconda3/envs/SafeFold

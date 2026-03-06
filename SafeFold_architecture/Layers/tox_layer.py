@@ -10,9 +10,8 @@ warnings.filterwarnings("ignore")
 
 pipeline = joblib.load(Path(__file__).parent / "./Toxicity_prediction/tox_pred.joblib")
 
-def go_terms_to_toxicity(GO_terms):
+def go_terms_to_toxicity(GO_terms):    
     X = pd.DataFrame([GO_terms])
-
     cols = pipeline.feature_names_in_
 
     X = X.reindex(columns=cols, fill_value=0)

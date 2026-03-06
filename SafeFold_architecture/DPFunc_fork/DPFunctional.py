@@ -44,7 +44,7 @@ def extract_sequence_and_ca_coords(model, chain_id=None):
             continue
         seq.append(aa)
         ca_coords.append(residue["CA"].coord.astype(float))
-
+    
     if not seq or not ca_coords:
         raise ValueError("Failed to extract sequence/CA coords (check chain selection and PDB completeness).")
 
@@ -78,17 +78,17 @@ def build_graph_from_points(points: np.ndarray, threshold: float = 12.0):
 
 def get_GO_terms(PDB, PID="XXX", debug = False):
     # 1) Build seq + coords
-    if debug: (print("🔗 Extracting sequence and Cα coords from PDB"))
+    if debug: (print(" - 🔗 Extracting sequence and Cα coords from PDB"))
     seq, coords = extract_sequence_and_ca_coords(PDB, chain_id=None)
 
     # 2) ESM residue embeddings (L, 1280)
-    if debug: (print("🔢 Creating the ESM embedding"))
+    if debug: (print(" - 🔢 Creating the ESM embedding"))
     emb = embed_esm2_t33_650M(seq)
 
     assert emb.shape[0] == len(seq)
     assert emb.shape[1] == 1280, emb.shape
 
-    if debug: (print("🕸️ Building the DGL graph"))
+    if debug: (print(" - 🕸️ Building the DGL graph"))
     # 3) DGL graph with required fields
     g = build_graph_from_points(coords, threshold=12.0)
     g.ndata["x"] = torch.from_numpy(emb)  # node features
@@ -106,7 +106,7 @@ def get_GO_terms(PDB, PID="XXX", debug = False):
 
     interpro_csr = sp.csr_matrix((1, INTERPRO_DIM), dtype=np.float32)
     
-    if debug: (print("🚀 Runing DPFunc"))
+    if debug: (print(" - 🚀 Runing DPFunc"))
     
     final_result = dpfunc_predict_in_memory(
         ont=ONTOLOGY,
@@ -118,11 +118,7 @@ def get_GO_terms(PDB, PID="XXX", debug = False):
         device="cuda:0" if torch.cuda.is_available() else "cpu",
         batch_size=1,
         save_each_submodel=False,
-    ).predictions
-    
-    if debug:
-        print("✅ Done. Results...")
-        print(final_result)
+    ).predictions.iloc[0]
 
     return final_result
 
