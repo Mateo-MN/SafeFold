@@ -28,7 +28,7 @@ The easiest way to install SafeFold is using the provided `setup.sh`.
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/SafeFold.git
+git clone https://github.com/Mateo-MN/SafeFold.git
 cd SafeFold
 ```
 
